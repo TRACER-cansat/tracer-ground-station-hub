@@ -22,7 +22,7 @@
     <p>運用者から受け取った公開URLを貼り付けてください。URLは地上局PCの再起動後に変わります。</p>
     <label for="station">公開操作画面のURL</label>
     <input id="station" type="url" placeholder="https://…trycloudflare.com" autocomplete="url">
-    <button id="open">操作画面を開く</button>
+    <button id="open">操作画面を開く</button> <button id="openHub">Hubを開く</button>
   </section>
   <section>
     <h2>地上局PCを設定する</h2>
@@ -39,6 +39,12 @@
       localStorage.setItem('tracer-station-url',url.href);window.open(url.href,'_blank','noopener');}
     catch{field.setCustomValidity('運用者から受け取ったHTTPSの公開URLを入力してください');field.reportValidity();}
   };
+  document.getElementById('openHub').onclick=()=>{
+    try{const url=new URL(field.value.trim());if(url.protocol!=='https:'||!url.hostname.endsWith('.trycloudflare.com'))throw Error();
+      localStorage.setItem('tracer-station-url',url.href);window.open(new URL('/hub/',url),'_blank','noopener');}
+    catch{field.setCustomValidity('運用者から受け取ったHTTPSの公開URLを入力してください');field.reportValidity();}
+  };
   field.oninput=()=>field.setCustomValidity('');
 </script>
 </html>
+
