@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRACER Ground Station Hub</title>
+<style>
+  :root{color-scheme:dark;font-family:system-ui,sans-serif;background:#09121a;color:#ecf8ff}
+  *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}
+  main{max-width:780px;width:100%;border:1px solid #294458;border-radius:18px;background:#111f2a;padding:clamp(24px,5vw,48px);box-shadow:0 20px 70px #0006}
+  small{color:#6edfd1;letter-spacing:.15em}h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;margin:.5em 0}
+  p{line-height:1.7;color:#b7cad7}section{padding:22px 0;border-top:1px solid #2b4050}
+  h2{font-size:1.2rem;margin:0 0 12px}a.button,button{display:inline-block;background:#65daca;color:#09202a;border:0;border-radius:10px;padding:12px 18px;font-weight:700;text-decoration:none;cursor:pointer}
+  input{width:100%;background:#08131b;border:1px solid #466174;border-radius:10px;padding:12px;color:#fff;font:inherit;margin:6px 0 12px}
+  .muted{font-size:.9rem;color:#8fa8b9}code{overflow-wrap:anywhere}
+</style>
+<main>
+  <small>TRACER / GROUND STATION</small>
+  <h1>地上局Hub</h1>
+  <p>このページは、どのWi‑Fiからも開ける案内・配布ページです。ローバーの操作画面は地上局PCが起動している間、運用者が共有したHTTPS URLから開けます。</p>
+  <section>
+    <h2>操作画面を開く</h2>
+    <p>運用者から受け取った公開URLを貼り付けてください。URLは地上局PCの再起動後に変わります。</p>
+    <label for="station">公開操作画面のURL</label>
+    <input id="station" type="url" placeholder="https://…trycloudflare.com" autocomplete="url">
+    <button id="open">操作画面を開く</button>
+  </section>
+  <section>
+    <h2>地上局PCを設定する</h2>
+    <p>ローバーと同じWi‑FiにつながるPCに、地上局のコード一式を展開します。<code>start_public_ground_station.ps1</code>を実行すると公開URLが表示されます。</p>
+    <a class="button" href="./tracer-pc-setup.zip" download>PC用ファイルをダウンロード</a>
+  </section>
+  <p class="muted">映像・モーター操作・双方向音声を含みます。公開URLを知っている人は操作できます。電源を入れたローバーと地上局PCは同じネットワークに接続してください。</p>
+</main>
+<script>
+  const field=document.getElementById('station');
+  field.value=localStorage.getItem('tracer-station-url')||'';
+  document.getElementById('open').onclick=()=>{
+    try{const url=new URL(field.value.trim());if(url.protocol!=='https:'||!url.hostname.endsWith('.trycloudflare.com'))throw Error();
+      localStorage.setItem('tracer-station-url',url.href);window.open(url.href,'_blank','noopener');}
+    catch{field.setCustomValidity('運用者から受け取ったHTTPSの公開URLを入力してください');field.reportValidity();}
+  };
+  field.oninput=()=>field.setCustomValidity('');
+</script>
+</html>
